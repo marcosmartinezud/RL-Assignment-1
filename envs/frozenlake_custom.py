@@ -1,10 +1,16 @@
 """
 Functions to create a personalized FrozenLake environment (random). Using TimeLimit to increase the maximum number of steps per episode.
+
+TO TEST IT:
+    python -m envs.frozenlake_custom --size 16 --p 0.95 --max_steps 400 --test_episodes 3
+
+    python -m envs.frozenlake_custom --size 16 --p 0.95 --save_map report/figures/my_map
 """
 
 from typing import Tuple, Optional
 import os
 import json
+import argparse
 
 import gymnasium as gym
 from gymnasium.wrappers import TimeLimit
@@ -12,14 +18,8 @@ from gymnasium.envs.toy_text.frozen_lake import FrozenLakeEnv, generate_random_m
 import numpy as np
 import textwrap
 
-def make_frozenlake(
-    size: int = 16,
-    p: float = 0.95,
-    is_slippery: bool = True,
-    max_episode_steps: int = 400,
-    seed: Optional[int] = None
-) -> Tuple[gym.Env, np.ndarray]:
-    """Create a FrozenLake environment with a random map
+def make_frozenlake(size: int = 16, p: float = 0.95, is_slippery: bool = True, max_episode_steps: int = 400, seed: Optional[int] = None) -> Tuple[gym.Env, np.ndarray]:
+    """Create a FrozenLake environment with a randomly generated map (the Gymnasium 'make' function receives a map as argument).
 
     Parameters
     ----------
@@ -127,10 +127,9 @@ def _play_random_episode(env: gym.Env, render: bool = False, max_steps: int = 40
             except Exception:
                 pass
         if terminated or truncated:
-            return total_reward(), bool(reward > 0)
+            return total_reward, bool(reward > 0)
     return total_reward, False
 
-# TODO: finish the documentation
 def demo(size: int = 16, p: float = 0.95, is_slippery: bool = True, max_episode_steps: int = 400, seed: Optional[int] = None, test_episodes: int=3, render: bool = False, save_map_to: Optional[str] = None):
     """Quick demo to test if the environment is being created and working. Prints the map and plays 'test_episodes' with random actions.
     
@@ -149,7 +148,7 @@ def demo(size: int = 16, p: float = 0.95, is_slippery: bool = True, max_episode_
     test_episodes : int, optional
         Number of random episodes, by default 3
     render : bool, optional
-        _description_, by default False
+        Render the env, by default False
     save_map_to : Optional[str], optional
         Path to save the map, by default None
     """
@@ -168,4 +167,26 @@ def demo(size: int = 16, p: float = 0.95, is_slippery: bool = True, max_episode_
         print(f"Episode {i+1}: reward={total_reward:.1f} reached goal={reached_goal}")
         
 if __name__ == "__main__":
-    None
+    parser = argparse.ArgumentParser(description="Generate and test personalized FrozenLake")
+    parser.add_argument("--size", type=int, default=16, help="size of the map (size x size)")
+    parser.add_argument("--p", type=float, default=0.95, help="probability of safe 'F' cell")
+    parser.add_argument("--slippery", action="store_true", help="sif True, environment will be slippery")
+    parser.add_argument("--no-slippery", dest="slippery", action="store_false", help="deterministic environment (not slippery)")
+    parser.add_argument("--max_steps", type=int, default=400, help="max steps per episode (TimeLimit)")
+    parser.add_argument("--seed", type=int, default=None, help="optional seed for reproducibility")
+    parser.add_argument("--test_episodes", type=int, default=3, help="episodes of random test")
+    parser.add_argument("--render", action="store_true", help="renderize the environment")
+    parser.add_argument("--save_map", type=str, default=None, help="base path to save the map")
+    
+    args = parser.parse_args()
+    
+    demo(
+        size=args.size,
+        p=args.p,
+        is_slippery=args.slippery,
+        max_episode_steps=args.max_steps,
+        seed=args.seed,
+        test_episodes=args.test_episodes,
+        render=args.render,
+        save_map_to=args.save_map,
+    )
