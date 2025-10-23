@@ -1,3 +1,7 @@
+"""
+    TO RUN IT: python -m experiments.sarsa_experiment
+"""
+
 import gymnasium as gym
 import optuna
 from algorithms.sarsa import train_sarsa, evaluate_policy, save_q

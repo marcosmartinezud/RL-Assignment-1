@@ -1,4 +1,10 @@
-# functions to create a custom frozenlake env, with TimeLimit
+"""
+    TO TEST IT:
+    
+        python -m envs.frozenlake_custom --size 16 --p 0.95 --max_steps 400 --test_episodes 3
+        
+        python -m envs.frozenlake_custom --size 16 --p 0.95 --save_map report/sarsa/my_map
+"""
 
 from typing import Tuple, Optional
 import os

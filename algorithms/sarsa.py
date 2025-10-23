@@ -1,3 +1,7 @@
+"""
+    TO RUN IT: python -m algorithms.sarsa
+"""
+
 import numpy as np
 from typing import Optional
 from tqdm import trange

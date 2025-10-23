@@ -1,3 +1,7 @@
+"""
+    TO TEST IT: python -m utils.plot_graphs_sarsa
+"""
+
 import optuna
 import optuna.visualization as vis
 
