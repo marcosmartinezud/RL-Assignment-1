@@ -1,6 +1,6 @@
 # RL Assignment 1
 
-**Authors:***
+**Authors:**
 Juan José Restrepo
 David Fernández
 Marcos Martínez
